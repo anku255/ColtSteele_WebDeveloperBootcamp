@@ -1,0 +1,22 @@
+h1 {
+	text-align: center;
+}
+
+td {
+	width: 100px;
+	height: 100px;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.middle-vertical {
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
+
+.middle-horizontal {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
