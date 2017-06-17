@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Patatap Clone</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<script type="text/javascript" src="assets/lib/paper-full.js"></script>
+	<script type="text/javascript" src="assets/lib/howler.js"></script>
+	<script type="text/javascript" src="assets/lib/keyData.js"></script>
+
+	<script type="text/paperscript" canvas="myCanvas">
+		
+	// array of cirlces
+	var circles = [];
+
+	function onKeyDown(event) {
+			// For every key pressed that is defined in keyData
+			if(keyData[event.key]) {
+				// maximum point in current window
+				var maxPoint = new Point(view.size.width, view.size.height);
+				// random point in (0,1)
+				var randomPoint = Point.random();
+				// random point in current window size
+				var point = maxPoint * randomPoint;
+				var newCircle = new Path.Circle(point, 500);
+				// fill color in cirlce using respective keyData color for the pressed key
+				newCircle.fillColor = keyData[event.key].color;
+				// play the sound from keyData for the pressed key
+				keyData[event.key].sound.play();
+				circles.push(newCircle);
+		}
+	}
+
+	function onFrame(event) {
+
+		// For every circle in circles array
+		// change its color by adding 1 to its hue
+		for(var i=0; i< circles.length; i++) {
+			circles[i].fillColor.hue +=1 ;
+			circles[i].scale(.9);
+
+			// If cirlce's area is less than 1 then remove is from array
+			if(circles[i].area < 1) {
+				circles[i].remove();
+				circles.splice(i,1);
+			}
+		}
+
+	}
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize="true"></canvas>
+</body>
+</html>
