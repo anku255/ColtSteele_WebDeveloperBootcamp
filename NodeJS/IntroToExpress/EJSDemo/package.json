@@ -1,0 +1,11 @@
+{
+  "name": "ejs_demo",
+  "version": "1.0.0",
+  "description": "A demo app to work with EJS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ankit Tiwari",
+  "license": "ISC"
+}
