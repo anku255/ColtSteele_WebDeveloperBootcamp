@@ -1,24 +1,49 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
+var express 	= require("express"),
+	app     	= express(),
+	bodyParser  = require("body-parser"),
+	mongoose 	= require("mongoose");
 
+mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
 
-var campgrounds = [
-		{name: "Salmon Creek", image: "https://farm2.staticflickr.com/1281/4684194306_18ebcdb01c.jpg"},
-		{name: "Granite Hill", image: "https://farm4.staticflickr.com/3872/14435096036_39db8f04bc.jpg"},
-		{name: "Mountain Goat's Rest", image: "https://farm3.staticflickr.com/2535/3823437635_c712decf64.jpg"}
-	]
+// SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+	name: String,
+	image: String
+});
+
+var Campground = mongoose.model("Campground", campgroundSchema);
+
+// Campground.create(
+// 	{
+// 		name: "Salmon Creek", 
+// 		image: "https://farm2.staticflickr.com/1281/4684194306_18ebcdb01c.jpg"
+// 	}, function(err, campground) {
+// 		if(err) {
+// 			console.log(err);
+// 		} else {
+// 			console.log("NEWLY CREATED CAMPGROUND");
+// 			console.log(campground);
+// 		}
+// 	});
 
 app.get("/", function(req, res) {
 	res.render("landing");
 });
 
 app.get("/campgrounds", function(req, res) {
+	// Get all the campgrounds from DB
+	Campground.find({},function(err, campgrounds) {
+		if(err) {
+			console.log(err);
+		} else {
+			res.render("campgrounds", {campgrounds: campgrounds});
 
-	res.render("campgrounds", {campgrounds: campgrounds});
+		}
+	});
+
 
 });
 
@@ -34,9 +59,16 @@ app.post("/campgrounds", function(req, res) {
 		name: name,
 		image: image
 	};
-	campgrounds.push(newCampground);
-	// redirect back to camgrounds page
-	res.redirect("/campgrounds");
+	// Add newCampground to the database
+	Campground.create(newCampground, function(err,newlyCreated) {
+		if(err) {
+			console.log(err);
+		} else {
+			// redirect back to camgrounds page
+			res.redirect("/campgrounds");
+		}
+	});
+	
 });
 
 app.listen(3000, function(req, res) {
