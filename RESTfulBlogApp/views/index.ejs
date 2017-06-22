@@ -1,3 +1,5 @@
+<% include partials/header %>
+
 <h1>INDEX PAGE!!!</h1>
 
 <% blogs.forEach(function(blog) { %>
@@ -8,3 +10,5 @@
 		<p><%= blog.body %></p>
 	</div>
 <% }) %>
+
+<% include partials/footer %>
