@@ -1,7 +1,8 @@
-var bodyParser  = require("body-parser"),
-	mongoose    = require("mongoose"),
-    express 	= require("express"),
-	app     	= express();
+var bodyParser    = require("body-parser"),
+	methodOveride = require("method-override"),
+	mongoose      = require("mongoose"),
+    express 	  = require("express"),
+	app     	  = express();
 
 // APP CONFIG
 
@@ -13,6 +14,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 // use body parser to parse req.body into a JS object
 app.use(bodyParser.urlencoded({extended: true}));
+// use method-override to override form POST request into PUT request
+app.use(methodOveride("_method"));
 
 // MONGOOSE/MODEL CONFIG
 var blogSchema = new mongoose.Schema({
@@ -68,6 +71,28 @@ app.get("/blogs/:id", function(req, res) {
 			res.redirect("/blogs");
 		} else {
 			res.render("show",{blog: foundBlog});
+		}
+	});
+});
+
+// EDIT ROUTE
+app.get("/blogs/:id/edit", function(req, res) {
+	Blog.findById(req.params.id, function(err, foundBlog){
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			res.render("edit", {blog: foundBlog});
+		}
+	});
+});
+
+// UPDATE ROUTE
+app.put("/blogs/:id", function(req, res) {
+	Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog) {
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			res.redirect("/blogs/" + req.params.id);
 		}
 	});
 });
