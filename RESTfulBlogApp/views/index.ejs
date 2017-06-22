@@ -15,7 +15,11 @@
                              <span><%= blog.created.toDateString() %></span>
                          </div>
                          <div class="description">
-                             <p><%- blog.body.substring(0, 100) %>...</p>
+                             <p>
+                                 <% if(blog.body !== undefined) {%>
+                                    <%- blog.body.substring(0, 100) %>
+                                 <% } %>
+                             </p>
                          </div>
                          <div class="extra">
                              <a class="ui floated basic violet button" href="/blogs/<%= blog._id %>">
