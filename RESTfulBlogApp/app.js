@@ -1,5 +1,6 @@
 var bodyParser    = require("body-parser"),
 	methodOveride = require("method-override"),
+	expressSanitizer = require("express-sanitizer"),
 	mongoose      = require("mongoose"),
     express 	  = require("express"),
 	app     	  = express();
@@ -16,6 +17,8 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 // use method-override to override form POST request into PUT request
 app.use(methodOveride("_method"));
+// use expressSanitizer to sanitize the input given by user
+app.use(expressSanitizer());
 
 // MONGOOSE/MODEL CONFIG
 var blogSchema = new mongoose.Schema({
@@ -52,6 +55,8 @@ app.get("/blogs/new", function(req, res) {
 // CREATE ROUTE
 app.post("/blogs", function(req, res) {
 	// create blog
+	// sanitize the input
+	req.body.blog.body = req.sanitize(req.body.blog.body);
 	Blog.create(req.body.blog , function(err, newBlog) {
 		if(err) {
 			res.render("new");
@@ -88,11 +93,25 @@ app.get("/blogs/:id/edit", function(req, res) {
 
 // UPDATE ROUTE
 app.put("/blogs/:id", function(req, res) {
+	// sanitize the input
+	req.body.blog.body = req.sanitize(req.body.blog.body);
 	Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog) {
 		if(err) {
 			res.redirect("/blogs");
 		} else {
 			res.redirect("/blogs/" + req.params.id);
+		}
+	});
+});
+
+// DELETE ROUTE
+app.delete("/blogs/:id", function(req, res){
+	// destroy blog
+	Blog.findByIdAndRemove(req.params.id, function(err) {
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			res.redirect("/blogs");
 		}
 	});
 });
