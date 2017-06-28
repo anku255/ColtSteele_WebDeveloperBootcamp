@@ -6,10 +6,12 @@ var express 	= require("express"),
 	seedDB      = require("./seeds"),
 	app     	  = express();
 
+mongoose.Promise = require("bluebird");
 mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public")); // __dirname gives the pwd
 
 seedDB();
 
