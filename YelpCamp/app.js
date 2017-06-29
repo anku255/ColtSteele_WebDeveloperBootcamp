@@ -95,7 +95,7 @@ app.post("/campgrounds", function(req, res) {
 // COMMENTS ROUTES
 // ================
 
-app.get("/campgrounds/:id/comments/new", function(req, res) {
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res) {
 	// Find campground by ID
 	Campground.findById(req.params.id, function(err, campground) {
 		if(err) {
@@ -106,7 +106,7 @@ app.get("/campgrounds/:id/comments/new", function(req, res) {
 	});
 });
 
-app.post("/campgrounds/:id/comments", function(req, res) {
+app.post("/campgrounds/:id/comments", isLoggedIn, function(req, res) {
 	// lookup campgroud using ID
 	Campground.findById(req.params.id, function(err, campground) {
 		if(err) {
@@ -171,6 +171,15 @@ app.get("/logout", function(req, res) {
 	req.logout();
 	res.redirect("/campgrounds");
 });
+
+
+// middleware function to check if user is logged in
+function(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+}
 
 app.listen(3000, function(req, res) {
 	console.log("The YelpCamp server has started at PORT 3000");
