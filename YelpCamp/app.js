@@ -31,6 +31,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// A middleware to pass currentUser in all routes
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
+});
+
 
 // Root Route
 app.get("/", function(req, res) {
@@ -174,7 +180,7 @@ app.get("/logout", function(req, res) {
 
 
 // middleware function to check if user is logged in
-function(req, res, next){
+function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
 		return next();
 	}
