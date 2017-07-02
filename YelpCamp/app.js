@@ -1,13 +1,14 @@
-var express 	  = require("express"),
-	LocalStrategy = require("passport-local"),
-	bodyParser    = require("body-parser"),
-	mongoose 	  	= require("mongoose"),
-	passport			= require("passport"),
-	Campground  	= require("./models/campground"),
-	Comment     	= require("./models/comment"),
-	User					= require("./models/user"),
-	seedDB      	= require("./seeds"),
-	app     	  	= express();
+var express 	   = require("express"),
+	LocalStrategy  = require("passport-local"),
+	methodOverride = require("method-override"),
+	bodyParser     = require("body-parser"),
+	mongoose 	  	 = require("mongoose"),
+	passport			 = require("passport"),
+	Campground  	 = require("./models/campground"),
+	Comment     	 = require("./models/comment"),
+	User					 = require("./models/user"),
+	seedDB      	 = require("./seeds"),
+	app     	  	 = express();
 
 var commentRoutes = require("./routes/comments"),
 		campgroundRoutes = require("./routes/campgrounds"),
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); // __dirname gives the pwd
+app.use(methodOverride("_method"));
 
 // seedDB(); // seed the database
 
